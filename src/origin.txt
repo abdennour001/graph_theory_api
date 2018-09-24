@@ -1,0 +1,13 @@
+Graph A
+5			
+4			
+undirected
+a
+b
+c
+d
+e
+a * b
+b * a
+b * d
+e * c
