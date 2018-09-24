@@ -52,4 +52,17 @@ public class Vertex {
     public void incrementDegree() {
         this.degree++;
     }
+
+    @Override
+    public String toString() {
+        String vertexString="";
+        vertexString += "Vertex {" + this.name + "}\n";
+        vertexString += "Adjacency List [";
+        for (Vertex v:
+             this.adjacencyList) {
+            vertexString += v.getName() + ", ";
+        }
+        vertexString += "]\n";
+        return vertexString;
+    }
 }

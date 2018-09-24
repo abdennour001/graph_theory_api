@@ -85,13 +85,30 @@ public class Graph {
                 }
                 Vertex tail=vertexAt(indexOfByName(tailVertexName));
                 Vertex head=vertexAt(indexOfByName(headVertexName));
-                Edge e=new Edge(tail, head);
-                if (!edgeValue.equals("")) e.setValue(edgeValue);
-                e.setDirected(this.isDirected);
-                this.addEdge(e);
-                tail.addAdjacentVertex(head);
-                if (!this.isDirected) {
-                    head.addAdjacentVertex(tail);
+                if (this.isDirected) {
+                    Edge e=new Edge(tail, head);
+                    if (!edgeValue.equals("")) e.setValue(edgeValue);
+                    e.setDirected(this.isDirected);
+                    this.addEdge(e);
+                    tail.addAdjacentVertex(head);
+                } else {
+                    boolean aig=false;
+                    for (Edge e:
+                         this.edgesList) {
+                        if (e.getTailVertex().equals(head) &&
+                                e.getHeadVertex().equals(tail)) {
+                            aig = true;
+                            break;
+                        }
+                    }
+                    if (!aig) {
+                        Edge edge=new Edge(tail, head);
+                        if (!edgeValue.equals("")) edge.setValue(edgeValue);
+                        edge.setDirected(this.isDirected);
+                        this.addEdge(edge);
+                        tail.addAdjacentVertex(head);
+                        head.addAdjacentVertex(tail);
+                    }
                 }
             }
         } catch (FileNotFoundException e) {

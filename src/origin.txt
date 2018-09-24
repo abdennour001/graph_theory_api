@@ -1,7 +1,7 @@
 Graph A
 5			
 4			
-undirected
+directed
 a
 b
 c

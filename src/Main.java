@@ -9,5 +9,13 @@ public class Main {
 
         Graph g=new Graph("src/origin.txt");
         g.toMatrix();
+        /*for (Vertex v:
+             g.getVerticesList()) {
+            System.out.println(v.toString());
+        }*/
+        for (Edge e:
+             g.getEdgesList()) {
+            System.out.println(e.toString());
+        }
     }
 }

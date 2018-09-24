@@ -57,4 +57,17 @@ public class Edge {
     public void setTailVertex(Vertex tailVertex) {
         this.tailVertex = tailVertex;
     }
+
+    @Override
+    public String toString() {
+        String edgeString="";
+        if (this.isDirected) {
+            edgeString += this.tailVertex.getName() + " -> " +
+                    this.headVertex.getName();
+        } else {
+            edgeString += this.tailVertex.getName() + " - " +
+                    this.headVertex.getName();
+        }
+        return edgeString;
+    }
 }
