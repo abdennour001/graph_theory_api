@@ -1,13 +1,25 @@
 Graph A
-5			
-4			
+8			
+13		
 directed
-a
-b
-c
-d
-e
-a * b
-b * a
-b * d
-e * c
+A
+B
+C
+D
+E
+F
+G
+H
+A * D
+A * B
+B * C
+C * E
+C * F
+D * C
+D * A
+E * G
+E * F
+E * B
+F * H
+G * F
+H * G

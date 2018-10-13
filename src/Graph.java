@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -16,6 +15,7 @@ public class Graph {
     private ArrayList<Edge> edgesList=new ArrayList<>();
     private boolean isDirected=false;
     private String pathToOriginFile="";
+    private ArrayList<Boolean> markedVerticesList=new ArrayList<>();
 
     /**
      * Origin File Format
@@ -214,4 +214,5 @@ public class Graph {
             System.out.println("");
         }
     }
+
 }

@@ -7,8 +7,9 @@ public class Vertex {
 
     private String name;
     private int degree=0;
+    private int id;
+    private int lowLink;
     private ArrayList<Vertex> adjacencyList=new ArrayList<>();
-
 
     public Vertex() {}
 
@@ -56,13 +57,29 @@ public class Vertex {
     @Override
     public String toString() {
         String vertexString="";
-        vertexString += "Vertex {" + this.name + "}\n";
+        vertexString += "Vertex [" + this.name + "] ";
         vertexString += "Adjacency List [";
         for (Vertex v:
              this.adjacencyList) {
             vertexString += v.getName() + ", ";
         }
-        vertexString += "]\n";
+        vertexString += "]";
         return vertexString;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getLowLink() {
+        return lowLink;
+    }
+
+    public void setLowLink(int lowLink) {
+        this.lowLink = lowLink;
     }
 }
