@@ -1,6 +1,6 @@
 Graph A
-8			
-8		
+7		
+11		
 undirected
 a
 b
@@ -9,12 +9,14 @@ d
 e
 f
 g
-h
-a * b
-a * f
-b * c
-c * h
-c * d
-d * e
-e * f
-f * g
+a * b * 5
+a * c * 4
+b * c * 10
+c * f * 5
+b * d * 2
+b * e * 2
+d * c * 8
+d * e * 1
+d * f * 3
+e * g * 40
+f * g * 6

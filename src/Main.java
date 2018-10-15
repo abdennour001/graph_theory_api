@@ -13,8 +13,10 @@ public class Main {
     private static Stack<Vertex> vertexStack=new Stack<>();
     private static ArrayList<Boolean> isOnStack=new ArrayList<>();
     private static int ID=0;
+    private static boolean isCycle=false;
 
     private static void initMarkedList(Graph graph) {
+        markedList.clear();
         for (Vertex v:
              graph.getVerticesList()) {
             markedList.add(graph.indexOf(v), false);
@@ -153,13 +155,125 @@ public class Main {
         return true;
     }
 
+    public static void main(String args[]) {
+
+        Graph graph=new Graph("src/origin.txt");
+        //g.toMatrix();
+        //DFS(graph);
+        //TarjanAlgorithm(graph);
+        //DSatur(graph);// Turns graph with colored vertices
+        Graph minimalSpanningTree = KruskalAlgorithm(graph);
+        for (Vertex v:
+             minimalSpanningTree.getVerticesList()) {
+            print(v.toString());
+        }
+    }
+
+    private static void DFSCycle(Graph graph, Vertex root, Vertex isCycleVertex) {
+        if(root.equals(isCycleVertex)) isCycle=true;
+        markedList.set(graph.indexOf(root), true);
+        for (Vertex next:
+                root.getAdjacencyList()) {
+            if(!markedList.get(graph.indexOf(next))) {
+                DFSCycle(graph, next, isCycleVertex);
+            }
+        }
+    }
+
+    private static Graph KruskalAlgorithm(Graph graph) {
+        Graph minimalSpanningTree=new Graph("Spanning Tree", false);
+        minimalSpanningTree.setOrder(graph.getOrder());
+        minimalSpanningTree.setNumberOfEdges(graph.getOrder() - 1);
+        int k=0;
+        (graph.getEdgesList()).sort((e1, e2) -> (Integer.parseInt(e1.getValue()) - Integer.parseInt(e2.getValue())));
+        for (Edge e:
+             graph.getEdgesList()) {
+            Boolean containsHead=false;
+            Boolean containsTail=false;
+
+            for (Vertex v:
+                 minimalSpanningTree.getVerticesList()) {
+                if(v.getName().equals(e.getHeadVertex().getName())) {
+                    containsHead=true;
+                }
+
+                if(v.getName().equals(e.getTailVertex().getName())) {
+                    containsTail=true;
+                }
+
+                if(containsHead && containsTail) break;
+            }
+
+            if(k <= graph.getOrder()-1) {
+
+                if (containsHead && containsTail) {
+                    isCycle=false;
+                    initMarkedList(minimalSpanningTree);
+                    DFSCycle(minimalSpanningTree, minimalSpanningTree.getVerticesList().get(minimalSpanningTree.indexOfByName(e.getHeadVertex().getName()))
+                            , minimalSpanningTree.getVerticesList().get(minimalSpanningTree.indexOfByName(e.getTailVertex().getName())));
+                    if(!isCycle) {
+                        String headName=e.getHeadVertex().getName();
+                        String tailName=e.getTailVertex().getName();
+
+                        Vertex vertexHead=minimalSpanningTree.getVerticesList().get(minimalSpanningTree.indexOfByName(headName));
+                        Vertex vertexTail=minimalSpanningTree.getVerticesList().get(minimalSpanningTree.indexOfByName(tailName));
+
+                        vertexHead.addAdjacentVertex(vertexTail);
+                        vertexTail.addAdjacentVertex(vertexHead);
+
+                        minimalSpanningTree.addEdge(e);
+                        k++;
+                    }
+                } else {
+
+                    if (containsHead) {
+                        String headName=e.getHeadVertex().getName();
+                        Vertex vertexHead=minimalSpanningTree.getVerticesList().get(minimalSpanningTree.indexOfByName(headName));
+                        Vertex vertexTail=new Vertex(e.getTailVertex().getName());
+                        vertexHead.addAdjacentVertex(vertexTail);
+                        vertexTail.addAdjacentVertex(vertexHead);
+                        minimalSpanningTree.addVertex(vertexTail);
+                    }
+
+                    if (containsTail) {
+                        String tailName=e.getTailVertex().getName();
+                        Vertex vertexTail=minimalSpanningTree.getVerticesList().get(minimalSpanningTree.indexOfByName(tailName));
+                        Vertex vertexHead=new Vertex(e.getHeadVertex().getName());
+
+                        vertexHead.addAdjacentVertex(vertexTail);
+                        vertexTail.addAdjacentVertex(vertexHead);
+
+                        minimalSpanningTree.addVertex(vertexHead);
+                    }
+
+                    if (!containsHead && !containsTail) {
+                        Vertex vertexHead=new Vertex(e.getHeadVertex().getName());
+                        Vertex vertexTail=new Vertex(e.getTailVertex().getName());
+
+                        vertexHead.addAdjacentVertex(vertexTail);
+                        vertexTail.addAdjacentVertex(vertexHead);
+
+                        minimalSpanningTree.addVertex(vertexHead);
+                        minimalSpanningTree.addVertex(vertexTail);
+
+                    }
+
+                    minimalSpanningTree.addEdge(e);
+                    k++;
+                }
+            }
+        }
+
+        return minimalSpanningTree;
+    }
+
     public static void DSatur(Graph graph) { // For assign a color to each vertex
         int currentColor=1;
         ArrayList<Vertex> noColoredVertices=new ArrayList<>();
         initIsColored(graph);
 
         for (Vertex v:
-             graph.getVerticesList()) {
+                graph.getVerticesList()) {
             noColoredVertices.add(v);
         }
 
@@ -168,7 +282,7 @@ public class Main {
             Vertex vertexMax=null;
             HashSet<Integer> vertexNeighborsColorsSet=null;
             for (Vertex v:
-                 noColoredVertices) { // Get max saturation degree
+                    noColoredVertices) { // Get max saturation degree
                 HashSet<Integer> neighborsColors=getSaturationDegree(v);
                 if(neighborsColors.size() >= max) {
                     max = neighborsColors.size();
@@ -185,20 +299,6 @@ public class Main {
                 }
             }
             currentColor++;
-        }
-    }
-
-
-    public static void main(String args[]) {
-
-        Graph graph=new Graph("src/origin.txt");
-        //g.toMatrix();
-        //DFS(graph);
-        //TarjanAlgorithm(graph);
-        DSatur(graph);// Turns graph with colored vertices
-        for (Vertex v:
-             graph.getVerticesList()) {
-            print(v.getName() + " " + v.getColor());
         }
     }
 
