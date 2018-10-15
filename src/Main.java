@@ -163,10 +163,7 @@ public class Main {
         //TarjanAlgorithm(graph);
         //DSatur(graph);// Turns graph with colored vertices
         Graph minimalSpanningTree = KruskalAlgorithm(graph);
-        for (Vertex v:
-             minimalSpanningTree.getVerticesList()) {
-            print(v.toString());
-        }
+        print(minimalSpanningTree.toString());
     }
 
     private static void DFSCycle(Graph graph, Vertex root, Vertex isCycleVertex) {

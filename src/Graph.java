@@ -215,4 +215,15 @@ public class Graph {
         }
     }
 
+    public String toString() {
+        String returnString="";
+
+        for (Vertex v:
+             this.verticesList) {
+            returnString += v.toString() + "\n";
+        }
+
+        return returnString;
+    }
+
 }
