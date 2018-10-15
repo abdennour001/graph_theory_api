@@ -1,14 +1,14 @@
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Stack;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * Created by AMOKRANE Abdennour on 22/09/2018.
  */
 public class Main {
 
+    private static ArrayList<Boolean> isColored=new ArrayList<>();
     private static ArrayList<Boolean> markedList=new ArrayList<>();
     private static Stack<Vertex> vertexStack=new Stack<>();
     private static ArrayList<Boolean> isOnStack=new ArrayList<>();
@@ -18,6 +18,13 @@ public class Main {
         for (Vertex v:
              graph.getVerticesList()) {
             markedList.add(graph.indexOf(v), false);
+        }
+    }
+
+    private static void initIsColored(Graph graph) {
+        for (Vertex vertex:
+                graph.getVerticesList()) {
+            isColored.add(graph.indexOf(vertex), false);
         }
     }
 
@@ -111,23 +118,96 @@ public class Main {
 
     }
 
-
-    public static void main(String args[]) {
-
-        Graph g=new Graph("src/origin.txt");
-        //g.toMatrix();
-        //DFS(g);
+    public static void TarjanAlgorithm(Graph g) {
         System.out.println("[Strongly Connected Components]");
         System.out.println();
         int i=0;
         for (ArrayList<Vertex> scc:
-             findSccs(g)) {
+                findSccs(g)) {
             System.out.println("[SCC " + i++ + "]");
             for (Vertex v:
-                 scc) {
+                    scc) {
                 System.out.println(v.toString() + " low-link = "+ v.getLowLink());
             }
             System.out.println();
         }
     }
+
+    public static HashSet getSaturationDegree(Vertex vertex) {
+        HashSet<Integer> colorsSet=new HashSet<Integer>();
+
+        for (Vertex neighbor:
+             vertex.getAdjacencyList()) {
+            if(neighbor.getColor() > -1) {
+                colorsSet.add(neighbor.getColor());
+            }
+        }
+        return colorsSet;
+    }
+
+    public static Boolean allColored(Graph graph) {
+        for (Boolean b:
+             isColored) {
+            if(!b) return false;
+        }
+        return true;
+    }
+
+    public static void DSatur(Graph graph) { // For assign a color to each vertex
+        int currentColor=1;
+        ArrayList<Vertex> noColoredVertices=new ArrayList<>();
+        initIsColored(graph);
+
+        for (Vertex v:
+             graph.getVerticesList()) {
+            noColoredVertices.add(v);
+        }
+
+        while (!allColored(graph)) {
+            int max=0;
+            Vertex vertexMax=null;
+            HashSet<Integer> vertexNeighborsColorsSet=null;
+            for (Vertex v:
+                 noColoredVertices) { // Get max saturation degree
+                HashSet<Integer> neighborsColors=getSaturationDegree(v);
+                if(neighborsColors.size() >= max) {
+                    max = neighborsColors.size();
+                    vertexMax = v;
+                    vertexNeighborsColorsSet = neighborsColors;
+                }
+            }
+            for (int i=1; i<=currentColor; i++) {
+                if(!vertexNeighborsColorsSet.contains(i)) {
+                    vertexMax.setColor(i);
+                    isColored.set(graph.indexOf(vertexMax), true);
+                    noColoredVertices.remove(vertexMax);
+                    break;
+                }
+            }
+            currentColor++;
+        }
+    }
+
+
+    public static void main(String args[]) {
+
+        Graph graph=new Graph("src/origin.txt");
+        //g.toMatrix();
+        //DFS(graph);
+        //TarjanAlgorithm(graph);
+        DSatur(graph);// Turns graph with colored vertices
+        for (Vertex v:
+             graph.getVerticesList()) {
+            print(v.getName() + " " + v.getColor());
+        }
+    }
+
+    private static void print(Object ToPrint) {
+        System.out.println(ToPrint);
+    }
+
+    private static void print() {
+        System.out.println();
+    }
+
 }

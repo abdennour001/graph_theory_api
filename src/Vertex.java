@@ -9,6 +9,7 @@ public class Vertex {
     private int degree=0;
     private int id;
     private int lowLink;
+    private int color=-1;
     private ArrayList<Vertex> adjacencyList=new ArrayList<>();
 
     public Vertex() {}
@@ -81,5 +82,13 @@ public class Vertex {
 
     public void setLowLink(int lowLink) {
         this.lowLink = lowLink;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 }
